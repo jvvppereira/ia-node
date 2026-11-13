@@ -9,23 +9,27 @@ const client = new OpenAI({
     maxRetries: 0,
 });
 
+async function generateText() {
+    client.chat.completions
+        .create({
+            model: "nvidia/nemotron-3-ultra-550b-a55b",
+            max_completion_tokens: 100,
+            messages: [
+                {
+                    role: "developer",
+                    "content": "Use emojis in the response and write in Portuguese",
+                },
+                {
+                    role: "user",
+                    "content": "Escreva uma frase sobre Typescript e Node.js",
+                },
+            ],
+        })
+        .then((response) => {
+            console.log(response.choices[0].message?.content);
+        }).catch((error) => {
+            console.error("Error:", error);
+        });
+}
 
-client.chat.completions
-    .create({
-        model:"nvidia/nemotron-3-ultra-550b-a55b",
-        messages: [
-            {
-                role: "user",
-                "content": "Escreva uma frase sobre Typescript e Node.js",
-            },
-        ],
-        temperature: 1,
-        top_p: 0.95,
-        max_tokens: 1024,
-        stream: false,
-    })
-    .then((response) => {
-        console.log(response.choices[0].message?.content);
-    }).catch((error) => {
-        console.error("Error:", error);
-    });
+generateText();
